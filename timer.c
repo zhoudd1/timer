@@ -7,7 +7,7 @@
 #define  OS_TIMER_MAX  32
 
 struct timer_t {
-    void (*pfun)(void);
+    void (*pfun)(void* para);
     unsigned int delay;
     unsigned int period;
     bool run;
@@ -81,7 +81,7 @@ void timer_stop(const timer_id index)
     timer_list[index].run    = false;
 }
 
-void timer_run(void)
+void timer_run(void* para)
 {
   uint8_t index;
   for (index = 0; index < OS_TIMER_MAX; index++)
@@ -89,7 +89,7 @@ void timer_run(void)
     if(timer_list[index].delay == 0){
         if (timer_list[index].run)
         {
-            (*timer_list[index].pfun)();
+            (*timer_list[index].pfun)(para);
             if (timer_list[index].period == 0)
             {
                 timer_delete(index);
@@ -104,13 +104,13 @@ void timer_run(void)
   }
 }
 
-void f1(void)
+void f1(void* para)
 {}
 
-void f2(void)
+void f2(void* para)
 {}
 
-void f3(void)
+void f3(void* para)
 {}
 
 
@@ -130,8 +130,9 @@ int main()
     timer_delete(f1_timer);
     timer_delete(f2_timer);
     timer_delete(f3_timer);
-
-    timer_run();
+	
+	void *para;
+    timer_run(para);
 
     return 0;
 }
