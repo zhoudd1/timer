@@ -26,7 +26,7 @@ void timer_init(void)
   }
 }
 
-timer_id timer_creat(void(*pFunction)(),
+timer_id timer_creat(void(*pFunction)(void* para),
                           const unsigned int delay,
                           const unsigned int period,
                           bool run)
@@ -120,19 +120,19 @@ int main()
 
     timer_init();
 
-    timer_id f1_timer = timer_creat(f1, 0, 100,false);
-    timer_id f2_timer = timer_creat(f2, 0, 200,false);
-    timer_id f3_timer = timer_creat(f3, 0, 400,false);
+    timer_id t1 = timer_creat(f1, 0, 100,false);
+    timer_id t2 = timer_creat(f2, 10, 200,false);
+    timer_id t3 = timer_creat(f3, 20, 400,false);
 
-    timer_start(f1_timer);
-    timer_stop(f1_timer);
-
-    timer_delete(f1_timer);
-    timer_delete(f2_timer);
-    timer_delete(f3_timer);
-	
 	void *para;
     timer_run(para);
 
+    timer_start(t1);
+    timer_stop(t1);
+
+    timer_delete(t1);
+    timer_delete(t2);
+    timer_delete(t3);
+	
     return 0;
 }
