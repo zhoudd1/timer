@@ -124,7 +124,7 @@ int main()
     timer_id t2 = timer_creat(f2, 10, 200,false);
     timer_id t3 = timer_creat(f3, 20, 400,false);
 
-	void *para;
+    void *para=NULL;
     timer_run(para);
 
     timer_start(t1);
