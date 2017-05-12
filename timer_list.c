@@ -322,12 +322,12 @@ int main()
     timer_t t2=timer_creat(f2, 10, 200,false);
     timer_t t3=timer_creat(f3, 20, 400,false);
 
-	void* para=NULL;
+    void* para=NULL;
     timer_run(para);
 
-	timer_delete(t1);
-	timer_delete(t2);
-	timer_delete(t3);
+    timer_delete(t1);
+    timer_delete(t2);
+    timer_delete(t3);
 
     return 0;
 }
