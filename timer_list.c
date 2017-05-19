@@ -264,13 +264,15 @@ bool timer_delete(const timer_t t)
 }
 
 void timer_start(timer_t t)
-{
+{		
 	t.run=true;
+	uint8_t i =timer_list_locate_item(l,t);
 }
 
 void timer_stop(timer_t t)
-{
+{	
 	t.run=false;
+	uint8_t i =timer_list_locate_item(l,t);
 }
 
 
