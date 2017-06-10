@@ -80,7 +80,7 @@ void timer_stop(const timer_id index)
     timer_list[index].run    = false;
 }
 
-void timer_run(void)
+void timer_sched(void)
 {
     uint8_t index;
     for (index = 0; index < OS_TIMER_MAX; index++)
@@ -124,7 +124,7 @@ int main()
     timer_id t2 = timer_creat(f2, 10, 200, false, NULL);
     timer_id t3 = timer_creat(f3, 20, 400, false, NULL);
 
-    timer_run();
+    timer_sched();
 
     timer_start(t1);
     timer_stop(t1);
