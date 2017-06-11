@@ -130,7 +130,16 @@ uint8_t timer_list_locate_item(timer_list L,timer_t e)
     return 0;
 }
 
-bool timer_list_get_prev_item(timer_list L,timer_t cur_e,timer_t *pre_e)
+timer_list timer_list_get_locate_p(timer_list L,int i)
+{
+    int j;
+    timer_list p=L;
+    for(j=1; j<=i; j++)
+        p=p->next;
+    return p;
+}
+
+bool timer_list_get_locate_prev_item(timer_list L,timer_t cur_e,timer_t *pre_e)
 {
     timer_list p=L->next->next;
     while(p!=L)
@@ -160,23 +169,12 @@ bool timer_list_get_next_item(timer_list L,timer_t cur_e,timer_t *next_e)
     return false;
 }
 
-
-timer_list timer_list_get_p(timer_list L,int i)
-{
-    int j;
-    timer_list p=L;
-    for(j=1; j<=i; j++)
-        p=p->next;
-    return p;
-}
-
-
 bool timer_list_insert(timer_list L,int i,timer_t e)
 {
     timer_list p,s;
     if(i<1||i>timer_list_length(L)+1)
         return false;
-    p=timer_list_get_p(L,i-1);
+    p=timer_list_get_locate_p(L,i-1);
     if(!p)
         return false;
     s=(timer_list)malloc(sizeof(timer_node));
@@ -196,7 +194,7 @@ bool timer_list_delete(timer_list L,int i/*,timer_t *e*/)
     timer_list p;
     if(i<1||i>timer_list_length(L))
         return false;
-    p=timer_list_get_p(L,i);
+    p=timer_list_get_locate_p(L,i);
     if(!p)
         return false;
     //*e=p->timer;
@@ -270,7 +268,7 @@ void timer_start(timer_t t)
     timer_list p;
     if(i<1||i>timer_list_length(l))
         return;
-    p=timer_list_get_p(l,i);
+    p=timer_list_get_locate_p(l,i);
     if(!p)
         return;
 
@@ -286,7 +284,7 @@ void timer_stop(timer_t t)
     timer_list p;
     if(i<1||i>timer_list_length(l))
         return;
-    p=timer_list_get_p(l,i);
+    p=timer_list_get_locate_p(l,i);
     if(!p)
         return;
 
