@@ -206,6 +206,7 @@ bool timer_list_delete(timer_list L,int i/*,timer_t *e*/)
     return true;
 }
 
+#if DEBUG
 void timer_list_traverse(timer_list L)
 {
     timer_list p=L->next;
@@ -227,7 +228,7 @@ void timer_list_traverse_back(timer_list L)
     }
     printf("\n");
 }
-
+#endif
 
 //测试实例
 
@@ -263,14 +264,33 @@ bool timer_delete(const timer_t t)
 
 void timer_start(timer_t t)
 {
-    t.run=true;
     uint8_t i =timer_list_locate_item(l,t);
+    t.run=true;
+
+    timer_list p;
+    if(i<1||i>timer_list_length(l))
+        return;
+    p=timer_list_get_p(l,i);
+    if(!p)
+        return;
+
+    p->timer.run = t.run;
+
 }
 
 void timer_stop(timer_t t)
 {
-    t.run=false;
     uint8_t i =timer_list_locate_item(l,t);
+    t.run=false;
+
+    timer_list p;
+    if(i<1||i>timer_list_length(l))
+        return;
+    p=timer_list_get_p(l,i);
+    if(!p)
+        return;
+
+    p->timer.run = t.run;
 }
 
 
