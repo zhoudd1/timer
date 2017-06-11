@@ -189,7 +189,7 @@ bool timer_list_insert(timer_list L,int i,timer_t e)
     return true;
 }
 
-bool timer_list_delete(timer_list L,int i/*,timer_t *e*/)
+bool timer_list_delete(timer_list L,int i)
 {
     timer_list p;
     if(i<1||i>timer_list_length(L))
@@ -201,6 +201,18 @@ bool timer_list_delete(timer_list L,int i/*,timer_t *e*/)
     p->prev->next=p->next;
     p->next->prev=p->prev;
     free(p);
+    return true;
+}
+
+bool timer_list_item_update(timer_list L,int i,timer_t t)
+{
+    timer_list p;
+    if(i<1||i>timer_list_length(L))
+        return false;
+    p=timer_list_get_locate_p(L,i);
+    if(!p)
+        return false;
+    p->timer=t;
     return true;
 }
 
@@ -264,31 +276,14 @@ void timer_start(timer_t t)
 {
     uint8_t i =timer_list_locate_item(l,t);
     t.run=true;
-
-    timer_list p;
-    if(i<1||i>timer_list_length(l))
-        return;
-    p=timer_list_get_locate_p(l,i);
-    if(!p)
-        return;
-
-    p->timer.run = t.run;
-
+    timer_list_item_update(l,i,t);
 }
 
 void timer_stop(timer_t t)
 {
     uint8_t i =timer_list_locate_item(l,t);
     t.run=false;
-
-    timer_list p;
-    if(i<1||i>timer_list_length(l))
-        return;
-    p=timer_list_get_locate_p(l,i);
-    if(!p)
-        return;
-
-    p->timer.run = t.run;
+    timer_list_item_update(l,i,t);
 }
 
 
