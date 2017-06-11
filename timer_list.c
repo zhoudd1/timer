@@ -6,19 +6,21 @@
 #include <malloc.h>
 #include <math.h>
 
-typedef struct {
+typedef struct
+{
     void (*pfun)(void* para);
     uint16_t delay;
     uint16_t period;
     bool run;
-}timer_t;
+    void* para;
+} timer_t;
 
 typedef struct timer_node
 {
     timer_t timer;
     struct timer_node *prev;
     struct timer_node *next;
-}timer_node,*timer_list;
+} timer_node,*timer_list;
 
 bool timer_list_init(timer_list *L)
 {
@@ -163,7 +165,7 @@ timer_list timer_list_get_p(timer_list L,int i)
 {
     int j;
     timer_list p=L;
-    for(j=1;j<=i;j++)
+    for(j=1; j<=i; j++)
         p=p->next;
     return p;
 }
@@ -233,50 +235,46 @@ timer_list l;
 
 bool timer_init(void)
 {
-  return timer_list_init(&l);
+    return timer_list_init(&l);
 }
 
 timer_t timer_creat(void(*pFunction)(void* para),
-                        const uint16_t delay,
-                        const uint16_t period,
-                        bool run)
+                    const uint16_t delay,
+                    const uint16_t period,
+                    const bool run,
+                    void* para)
 {
-  timer_t t;
-
-  t.pfun  = pFunction;
-
-  t.delay  = delay;
-
-  t.period  = period;
-
-  t.run  = run;
-
-  timer_list_insert(l,1,t);
-
-  return l->timer;
+    timer_t t;
+    t.pfun  = pFunction;
+    t.delay  = delay;
+    t.period  = period;
+    t.run  = run;
+    t.para = para;
+    timer_list_insert(l,1,t);
+    return l->timer;
 }
 
 
 bool timer_delete(const timer_t t)
-{	
+{
     uint8_t i =timer_list_locate_item(l,t);
     return timer_list_delete(l,i);
 }
 
 void timer_start(timer_t t)
-{		
-	t.run=true;
-	uint8_t i =timer_list_locate_item(l,t);
+{
+    t.run=true;
+    uint8_t i =timer_list_locate_item(l,t);
 }
 
 void timer_stop(timer_t t)
-{	
-	t.run=false;
-	uint8_t i =timer_list_locate_item(l,t);
+{
+    t.run=false;
+    uint8_t i =timer_list_locate_item(l,t);
 }
 
 
-void timer_run(void* para)
+void timer_sched()
 {
     timer_list p=l->next;
     while(p!=l)
@@ -287,13 +285,13 @@ void timer_run(void* para)
         {
             if (p->timer.run)
             {
-              (*p->timer.pfun)(para);
+                (*p->timer.pfun)(p->timer.para);
 
-              if (p->timer.period == 0)
-              {
-                timer_delete(p->timer);
-              }
-              else p->timer.delay = p->timer.period;
+                if (p->timer.period == 0)
+                {
+                    timer_delete(p->timer);
+                }
+                else p->timer.delay = p->timer.period;
             }
         }
         else
@@ -320,12 +318,11 @@ int main()
 
     timer_init();
 
-    timer_t t1=timer_creat(f1, 0, 100,false);
-    timer_t t2=timer_creat(f2, 10, 200,false);
-    timer_t t3=timer_creat(f3, 20, 400,false);
+    timer_t t1=timer_creat(f1, 0, 100, false, NULL);
+    timer_t t2=timer_creat(f2, 10, 200, false, NULL);
+    timer_t t3=timer_creat(f3, 20, 400, false, NULL);
 
-    void* para=NULL;
-    timer_run(para);
+    timer_sched();
 
     timer_delete(t1);
     timer_delete(t2);
